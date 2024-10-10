@@ -95,6 +95,7 @@ private val PLATFORM_IMPLEMENTATION_MODULES = java.util.List.of(
   // todo not used by platform - move to plugin
   "intellij.platform.ide.designer",
   "intellij.platform.ide.remote",
+  "intellij.platform.ide.ui.inspector",
 )
 
 @Suppress("RemoveRedundantQualifierName")
@@ -204,9 +205,10 @@ internal suspend fun createPlatformLayout(projectLibrariesUsedByPlugins: SortedS
         "eclipse.lsp4j.jsonrpc.debug",
       )
     )
-
-    layout.withProjectLibrary("rhino")
   }
+  
+  //used as a transitive dependency in the 'proxy-vole' library and excluded from it, so needs to be included explicitly
+  layout.withProjectLibrary("rhino")
 
   // used by intellij.database.jdbcConsole - put to a small util module
   layout.withProjectLibrary(libraryName = "jbr-api", jarName = UTIL_JAR)
