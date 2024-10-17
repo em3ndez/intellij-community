@@ -4396,9 +4396,19 @@ public abstract class HighLevelQuickFixTestGenerated extends AbstractHighLevelQu
                 runTest("../../../idea/tests/testData/quickfix/typeMismatch/numberConversion/toByte/double.kt");
             }
 
+            @TestMetadata("doubleInitializer.kt")
+            public void testDoubleInitializer() throws Exception {
+                runTest("../../../idea/tests/testData/quickfix/typeMismatch/numberConversion/toByte/doubleInitializer.kt");
+            }
+
             @TestMetadata("float.kt")
             public void testFloat() throws Exception {
                 runTest("../../../idea/tests/testData/quickfix/typeMismatch/numberConversion/toByte/float.kt");
+            }
+
+            @TestMetadata("floatVarAssignment.kt")
+            public void testFloatVarAssignment() throws Exception {
+                runTest("../../../idea/tests/testData/quickfix/typeMismatch/numberConversion/toByte/floatVarAssignment.kt");
             }
 
             @TestMetadata("floatWithVer1_2.kt")
@@ -4409,6 +4419,11 @@ public abstract class HighLevelQuickFixTestGenerated extends AbstractHighLevelQu
             @TestMetadata("long.kt")
             public void testLong() throws Exception {
                 runTest("../../../idea/tests/testData/quickfix/typeMismatch/numberConversion/toByte/long.kt");
+            }
+
+            @TestMetadata("longReturn.kt")
+            public void testLongReturn() throws Exception {
+                runTest("../../../idea/tests/testData/quickfix/typeMismatch/numberConversion/toByte/longReturn.kt");
             }
         }
 
@@ -4430,9 +4445,19 @@ public abstract class HighLevelQuickFixTestGenerated extends AbstractHighLevelQu
                 runTest("../../../idea/tests/testData/quickfix/typeMismatch/numberConversion/toChar/byte.kt");
             }
 
+            @TestMetadata("byteReturn.kt")
+            public void testByteReturn() throws Exception {
+                runTest("../../../idea/tests/testData/quickfix/typeMismatch/numberConversion/toChar/byteReturn.kt");
+            }
+
             @TestMetadata("double.kt")
             public void testDouble() throws Exception {
                 runTest("../../../idea/tests/testData/quickfix/typeMismatch/numberConversion/toChar/double.kt");
+            }
+
+            @TestMetadata("doubleInitializer.kt")
+            public void testDoubleInitializer() throws Exception {
+                runTest("../../../idea/tests/testData/quickfix/typeMismatch/numberConversion/toChar/doubleInitializer.kt");
             }
 
             @TestMetadata("doubleLiteral.kt")
@@ -4448,6 +4473,11 @@ public abstract class HighLevelQuickFixTestGenerated extends AbstractHighLevelQu
             @TestMetadata("floatLiteral.kt")
             public void testFloatLiteral() throws Exception {
                 runTest("../../../idea/tests/testData/quickfix/typeMismatch/numberConversion/toChar/floatLiteral.kt");
+            }
+
+            @TestMetadata("floatLiteralVarAssignment.kt")
+            public void testFloatLiteralVarAssignment() throws Exception {
+                runTest("../../../idea/tests/testData/quickfix/typeMismatch/numberConversion/toChar/floatLiteralVarAssignment.kt");
             }
 
             @TestMetadata("int.kt")
@@ -4531,6 +4561,11 @@ public abstract class HighLevelQuickFixTestGenerated extends AbstractHighLevelQu
             @TestMetadata("convertExpression.kt")
             public void testConvertExpression() throws Exception {
                 runTest("../../../idea/tests/testData/quickfix/typeMismatch/numberConversion/convertExpression.kt");
+            }
+
+            @TestMetadata("convertExpressionValAssignment.kt")
+            public void testConvertExpressionValAssignment() throws Exception {
+                runTest("../../../idea/tests/testData/quickfix/typeMismatch/numberConversion/convertExpressionValAssignment.kt");
             }
 
             @TestMetadata("convertToSigned.kt")
@@ -4626,6 +4661,65 @@ public abstract class HighLevelQuickFixTestGenerated extends AbstractHighLevelQu
         @TestMetadata("unsigned.kt")
         public void testUnsigned() throws Exception {
             runTest("../../../idea/tests/testData/quickfix/typeMismatch/parameterTypeMismatch/unsigned.kt");
+        }
+    }
+
+    @RunWith(JUnit3RunnerWithInners.class)
+    @TestMetadata("../../../idea/tests/testData/quickfix/typeMismatch/roundNumber")
+    public static class RoundNumber extends AbstractHighLevelQuickFixTest {
+        @java.lang.Override
+        @org.jetbrains.annotations.NotNull
+        public final KotlinPluginMode getPluginMode() {
+            return KotlinPluginMode.K2;
+        }
+
+        private void runTest(String testDataFilePath) throws Exception {
+            KotlinTestUtils.runTest(this::doTest, this, testDataFilePath);
+        }
+
+        @TestMetadata("assignment.kt")
+        public void testAssignment() throws Exception {
+            runTest("../../../idea/tests/testData/quickfix/typeMismatch/roundNumber/assignment.kt");
+        }
+
+        @TestMetadata("initializer.kt")
+        public void testInitializer() throws Exception {
+            runTest("../../../idea/tests/testData/quickfix/typeMismatch/roundNumber/initializer.kt");
+        }
+
+        @TestMetadata("notApplicable.kt")
+        public void testNotApplicable() throws Exception {
+            runTest("../../../idea/tests/testData/quickfix/typeMismatch/roundNumber/notApplicable.kt");
+        }
+
+        @TestMetadata("notApplicable2.kt")
+        public void testNotApplicable2() throws Exception {
+            runTest("../../../idea/tests/testData/quickfix/typeMismatch/roundNumber/notApplicable2.kt");
+        }
+
+        @TestMetadata("return.kt")
+        public void testReturn() throws Exception {
+            runTest("../../../idea/tests/testData/quickfix/typeMismatch/roundNumber/return.kt");
+        }
+
+        @TestMetadata("roundDoubleToInt.kt")
+        public void testRoundDoubleToInt() throws Exception {
+            runTest("../../../idea/tests/testData/quickfix/typeMismatch/roundNumber/roundDoubleToInt.kt");
+        }
+
+        @TestMetadata("roundDoubleToLong.kt")
+        public void testRoundDoubleToLong() throws Exception {
+            runTest("../../../idea/tests/testData/quickfix/typeMismatch/roundNumber/roundDoubleToLong.kt");
+        }
+
+        @TestMetadata("roundFloatToInt.kt")
+        public void testRoundFloatToInt() throws Exception {
+            runTest("../../../idea/tests/testData/quickfix/typeMismatch/roundNumber/roundFloatToInt.kt");
+        }
+
+        @TestMetadata("roundFloatToLong.kt")
+        public void testRoundFloatToLong() throws Exception {
+            runTest("../../../idea/tests/testData/quickfix/typeMismatch/roundNumber/roundFloatToLong.kt");
         }
     }
 
@@ -4963,6 +5057,11 @@ public abstract class HighLevelQuickFixTestGenerated extends AbstractHighLevelQu
             runTest("../../../idea/tests/testData/quickfix/typeMismatch/wrongPrimitive/floatToInt2.kt");
         }
 
+        @TestMetadata("floatToIntReturn.kt")
+        public void testFloatToIntReturn() throws Exception {
+            runTest("../../../idea/tests/testData/quickfix/typeMismatch/wrongPrimitive/floatToIntReturn.kt");
+        }
+
         @TestMetadata("floatToLong.kt")
         public void testFloatToLong() throws Exception {
             runTest("../../../idea/tests/testData/quickfix/typeMismatch/wrongPrimitive/floatToLong.kt");
@@ -4981,6 +5080,11 @@ public abstract class HighLevelQuickFixTestGenerated extends AbstractHighLevelQu
         @TestMetadata("intToUnsigned.kt")
         public void testIntToUnsigned() throws Exception {
             runTest("../../../idea/tests/testData/quickfix/typeMismatch/wrongPrimitive/intToUnsigned.kt");
+        }
+
+        @TestMetadata("intToUnsignedSingleExprFunReturn.kt")
+        public void testIntToUnsignedSingleExprFunReturn() throws Exception {
+            runTest("../../../idea/tests/testData/quickfix/typeMismatch/wrongPrimitive/intToUnsignedSingleExprFunReturn.kt");
         }
 
         @TestMetadata("longToDouble.kt")

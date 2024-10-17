@@ -7,6 +7,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.nls.NlsMessages;
 import com.intellij.openapi.util.NlsSafe;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.ui.HtmlToSimpleColoredComponentConverter;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.components.panels.NonOpaquePanel;
@@ -18,24 +19,17 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import javax.swing.*;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.swing.text.html.HTML;
 import java.awt.*;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.function.Supplier;
 
 
 public class TestStatusLine extends NonOpaquePanel {
   private static final SimpleTextAttributes IGNORED_ATTRIBUTES = new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, JBUI.CurrentTheme.Label.warningForeground());
   private static final SimpleTextAttributes FAILED_ATTRIBUTES = new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, JBUI.CurrentTheme.Label.errorForeground());
+  private final HtmlToSimpleColoredComponentConverter myConverter;
 
   protected final JProgressBar myProgressBar = new JProgressBar();
   protected final SimpleColoredComponent myState = new SimpleColoredComponent();
@@ -67,6 +61,16 @@ public class TestStatusLine extends NonOpaquePanel {
 
     add(stateWrapper, BorderLayout.WEST);
     myState.append(ExecutionBundle.message("junit.runing.info.starting.label"));
+
+    myConverter = new HtmlToSimpleColoredComponentConverter((tag, attr) -> {
+      final String className = (String) attr.getAttribute(HTML.Attribute.CLASS);
+      if (className == null) return SimpleTextAttributes.REGULAR_ATTRIBUTES;
+      return switch (className) {
+        case "failed" -> FAILED_ATTRIBUTES;
+        case "ignored" -> IGNORED_ATTRIBUTES;
+        default -> SimpleTextAttributes.REGULAR_ATTRIBUTES;
+      };
+    });
   }
 
   public void formatTestMessage(final int testsTotal,
@@ -105,7 +109,8 @@ public class TestStatusLine extends NonOpaquePanel {
     int ignoredCount = finishedTestsCount - failuresCount - passedCount;
 
     if (finishedTestsCount != testsTotal) {
-      if (endTime != 0) {
+      final var stopped = endTime != 0;
+      if (stopped) {
         myState.append(TestRunnerBundle.message("test.result.stopped"));
         myState.append(" ");
       }
@@ -117,6 +122,12 @@ public class TestStatusLine extends NonOpaquePanel {
       else if (passedCount == 0) appendColored(TestRunnerBundle.message("test.result.in.progress.failed.ignored", finishedTestsCount, testsTotal, failedCount, ignoredCount));
       else if (failedCount == 0) appendColored(TestRunnerBundle.message("test.result.in.progress.passed.ignored", finishedTestsCount, testsTotal, passedCount, ignoredCount));
       else appendColored(TestRunnerBundle.message("test.result.in.progress.failed.passed.ignored", finishedTestsCount, testsTotal, failedCount, passedCount, ignoredCount));
+
+      if (stopped && duration != null) {
+        myStateDescription.setVisible(true);
+        myStateDescription.append(NlsMessages.formatDurationApproximateNarrow(duration), SimpleTextAttributes.GRAY_ATTRIBUTES);
+      }
+
       return;
     }
 
@@ -135,25 +146,9 @@ public class TestStatusLine extends NonOpaquePanel {
   }
 
   private void appendColored(@Nls String text) {
-    try {
-      Document document = DocumentBuilderFactory.newInstance()
-        .newDocumentBuilder()
-        .parse(new ByteArrayInputStream(("<root>" + text + "</root>").getBytes(StandardCharsets.UTF_8)));
-      NodeList divs = document.getElementsByTagName("div");
-
-      for (int i = 0; i < divs.getLength(); i++) {
-        Element div = (Element) divs.item(i);
-        var style = switch (div.getAttribute("class")) {
-          case "failed" -> FAILED_ATTRIBUTES;
-          case "ignored" -> IGNORED_ATTRIBUTES;
-          default -> SimpleTextAttributes.REGULAR_ATTRIBUTES;
-        };
-        //noinspection HardCodedStringLiteral
-        myState.append(div.getTextContent(), style);
-      }
-    } catch (ParserConfigurationException | SAXException | IOException e) {
-      throw new RuntimeException("Couldn't parse test status message", e);
-    }
+    myConverter
+      .convert(text, SimpleTextAttributes.REGULAR_ATTRIBUTES)
+      .forEach(frag -> myState.append(frag.getText(), frag.getAttributes()));
   }
 
   public void setIndeterminate(boolean flag) {
